@@ -26,15 +26,6 @@ for ip in brute_forcers:
     print(ip)
 
     
- from itertools import groupby
-
-def is_sequential(ip_list):
-    # Group IP addresses by subnet
-    subnet_groups = []
-    for subnet, ips in groupby(sorted(ip_list), lambda ip: '.'.join(ip.split('.')[:3])):
-        subnet_groups.append(list(ips))
-        
-        
  def is_sequential_ports(port_list):
     if len(port_list) < 3:
         return False
@@ -45,6 +36,14 @@ def is_sequential(ip_list):
             return True
     
     return False
+
+from itertools import groupby
+
+def is_sequential(ip_list):
+    # Group IP addresses by subnet
+    subnet_groups = []
+    for subnet, ips in groupby(sorted(ip_list), lambda ip: '.'.join(ip.split('.')[:3])):
+        subnet_groups.append(list(ips))
 
     # Check for sequential IPs in each subnet group
     for subnet_ips in subnet_groups:
