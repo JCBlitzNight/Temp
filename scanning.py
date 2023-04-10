@@ -26,20 +26,36 @@ for ip in brute_forcers:
     print(ip)
 
     
-    TCP Connect Scan: Detects a full three-way handshake, with the SYN, SYN-ACK, and ACK packets.
+ from itertools import groupby
 
-TCP SYN Scan: Detects SYN packets sent to a target without completing the three-way handshake.
+def is_sequential(ip_list):
+    # Group IP addresses by subnet
+    subnet_groups = []
+    for subnet, ips in groupby(sorted(ip_list), lambda ip: '.'.join(ip.split('.')[:3])):
+        subnet_groups.append(list(ips))
+        
+        
+ def is_sequential_ports(port_list):
+    if len(port_list) < 3:
+        return False
+    
+    port_list = sorted(port_list)
+    for i in range(len(port_list) - 2):
+        if port_list[i+1] == port_list[i]+1 and port_list[i+2] == port_list[i]+2:
+            return True
+    
+    return False
 
-TCP FIN Scan: Detects FIN packets sent to a target to determine which ports are open or closed.
-
-TCP Null Scan: Detects packets with all flags set to zero, which can be used to identify open ports.
-
-TCP Xmas Scan: Detects packets with the FIN, PSH, and URG flags set, which can be used to identify open ports.
-
-UDP Scan: Detects packets sent to UDP ports, which can be used to identify open or closed ports.
-
-ACK Scan: Detects ACK packets sent to a target to determine which ports are open or closed.
-
-Window Scan: Detects the size of the TCP window on a target, which can be used to identify open or closed ports.
-
-Maimon Scan: Detects packets sent with the ACK and URG flags set, which can be used to identify open ports.
+    # Check for sequential IPs in each subnet group
+    for subnet_ips in subnet_groups:
+        if len(subnet_ips) < 3:
+            continue
+        sorted_ips = sorted(subnet_ips, key=lambda ip: [int(num) for num in ip.split('.')])
+        for i in range(len(sorted_ips) - 2):
+            current_ip = sorted_ips[i].split('.')
+            next_ip = sorted_ips[i + 1].split('.')
+            after_next_ip = sorted_ips[i + 2].split('.')
+            if (int(next_ip[3]) - int(current_ip[3]) == 1 and
+                int(after_next_ip[3]) - int(next_ip[3]) == 1):
+                return True
+    return False
