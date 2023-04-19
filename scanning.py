@@ -58,3 +58,28 @@ def is_sequential(ip_list):
                 int(after_next_ip[3]) - int(next_ip[3]) == 1):
                 return True
     return False
+
+# define the necessary constants and structures
+STD_OUTPUT_HANDLE = -11
+class CONSOLE_CURSOR_INFO(ctypes.Structure):
+    _fields_ = [("dwSize", ctypes.c_int), ("bVisible", ctypes.c_long)]
+
+def hide_cursor():
+    # get the console handle and cursor info
+    handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
+    cursor_info = CONSOLE_CURSOR_INFO()
+    ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+
+    # set the cursor visibility to False
+    cursor_info.bVisible = False
+    ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+
+def show_cursor():
+    # get the console handle and cursor info
+    handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
+    cursor_info = CONSOLE_CURSOR_INFO()
+    ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+
+    # set the cursor visibility to True
+    cursor_info.bVisible = True
+    ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
