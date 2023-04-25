@@ -60,22 +60,17 @@ def is_sequential(ip_list):
     return False
 
 import argparse
+  parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--search', action='store_true', help='Execute search_src_ip function')
+    parser.add_argument('-b', '--bulk', action='store_true', help='Execute bulk_search_ip function')
+    parser.add_argument('-i', '--interactive', action='store_true', help='Activate interactive mode')
+    args = parser.parse_args()
 
-# create the main parser
-parser = argparse.ArgumentParser(description='IP search tool')
-
-# create the subparsers for the two commands
-subparsers = parser.add_subparsers(dest='command', help='sub-command help')
-
-# create the parser for the search_src_ip command
-search_src_ip_parser = subparsers.add_parser('search_src_ip', help='search for records by source IP')
-search_src_ip_parser.add_argument('input_file', type=str, help='path to the input file')
-search_src_ip_parser.add_argument('src_ip', type=str, help='source IP to search for')
-
-# create the parser for the bulk_search_ip command
-bulk_search_ip_parser = subparsers.add_parser('bulk_search_ip', help='bulk search for records by source IP')
-bulk_search_ip_parser.add_argument('input_file', type=str, help='path to the input file')
-bulk_search_ip_parser.add_argument('output_file', type=str, help='path to the output file')
-
-# parse the arguments
-args = parser.parse_args()
+    if args.search:
+        search_src_ip()
+    elif args.bulk:
+        bulk_search_ip()
+    elif args.interactive:
+        interactive_mode()
+    else:
+        parser.print_help()
