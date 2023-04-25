@@ -59,27 +59,23 @@ def is_sequential(ip_list):
                 return True
     return False
 
-# define the necessary constants and structures
-STD_OUTPUT_HANDLE = -11
-class CONSOLE_CURSOR_INFO(ctypes.Structure):
-    _fields_ = [("dwSize", ctypes.c_int), ("bVisible", ctypes.c_long)]
+import argparse
 
-def hide_cursor():
-    # get the console handle and cursor info
-    handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
-    cursor_info = CONSOLE_CURSOR_INFO()
-    ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+# create the main parser
+parser = argparse.ArgumentParser(description='IP search tool')
 
-    # set the cursor visibility to False
-    cursor_info.bVisible = False
-    ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+# create the subparsers for the two commands
+subparsers = parser.add_subparsers(dest='command', help='sub-command help')
 
-def show_cursor():
-    # get the console handle and cursor info
-    handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
-    cursor_info = CONSOLE_CURSOR_INFO()
-    ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+# create the parser for the search_src_ip command
+search_src_ip_parser = subparsers.add_parser('search_src_ip', help='search for records by source IP')
+search_src_ip_parser.add_argument('input_file', type=str, help='path to the input file')
+search_src_ip_parser.add_argument('src_ip', type=str, help='source IP to search for')
 
-    # set the cursor visibility to True
-    cursor_info.bVisible = True
-    ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(cursor_info))
+# create the parser for the bulk_search_ip command
+bulk_search_ip_parser = subparsers.add_parser('bulk_search_ip', help='bulk search for records by source IP')
+bulk_search_ip_parser.add_argument('input_file', type=str, help='path to the input file')
+bulk_search_ip_parser.add_argument('output_file', type=str, help='path to the output file')
+
+# parse the arguments
+args = parser.parse_args()
