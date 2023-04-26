@@ -1,76 +1,81 @@
-import csv
+import collections
+import math
 
-# IP addresses and number of failed login attempts
-ip_count = {}
+# Initialize hash tables
+Source = collections.defaultdict(lambda: [0, 0])
+Candidate = collections.defaultdict(int)
 
-# Threshold for number of failed login attempts
-threshold = 10
+# Set threshold values
+c = 5 # minimum number of flows required to calculate FSD entropy
+alpha = 0.5 # threshold for FSD entropy
+eta0 = 0.5 # lower threshold for likelihood ratio
+eta1 = 1.5 # upper threshold for likelihood ratio
 
-# Read network logs from a CSV file
-with open('network_logs.csv', 'r') as logs:
-    logs_reader = csv.reader(logs)
-    for row in logs_reader:
-        if 'failed login' in row[4]:
-            ip = row[2]
-            if ip in ip_count:
-                ip_count[ip] += 1
-            else:
-                ip_count[ip] = 1
+def update(srcip, fsd):
+    """
+    Update likelihood ratio for srcip based on FSD entropy.
+    """
+    # Get current likelihood ratio for srcip
+    ratio = Candidate[srcip]
+    # If srcip has not been seen before, set ratio to 1
+    if ratio == 0:
+        ratio = 1
 
-# Identify IP addresses that exceeded the threshold
-brute_forcers = [ip for ip, count in ip_count.items() if count >= threshold]
+    # Check if srcip has enough flows to calculate FSD entropy
+    if Source[srcip][0] < c:
+        return
 
-# Print the identified IP addresses
-print("Brute Forcers:")
-for ip in brute_forcers:
-    print(ip)
-
-    
- def is_sequential_ports(port_list):
-    if len(port_list) < 3:
-        return False
-    
-    port_list = sorted(port_list)
-    for i in range(len(port_list) - 2):
-        if port_list[i+1] == port_list[i]+1 and port_list[i+2] == port_list[i]+2:
-            return True
-    
-    return False
-
-from itertools import groupby
-
-def is_sequential(ip_list):
-    # Group IP addresses by subnet
-    subnet_groups = []
-    for subnet, ips in groupby(sorted(ip_list), lambda ip: '.'.join(ip.split('.')[:3])):
-        subnet_groups.append(list(ips))
-
-    # Check for sequential IPs in each subnet group
-    for subnet_ips in subnet_groups:
-        if len(subnet_ips) < 3:
-            continue
-        sorted_ips = sorted(subnet_ips, key=lambda ip: [int(num) for num in ip.split('.')])
-        for i in range(len(sorted_ips) - 2):
-            current_ip = sorted_ips[i].split('.')
-            next_ip = sorted_ips[i + 1].split('.')
-            after_next_ip = sorted_ips[i + 2].split('.')
-            if (int(next_ip[3]) - int(current_ip[3]) == 1 and
-                int(after_next_ip[3]) - int(next_ip[3]) == 1):
-                return True
-    return False
-
-import argparse
-  parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--search', action='store_true', help='Execute search_src_ip function')
-    parser.add_argument('-b', '--bulk', action='store_true', help='Execute bulk_search_ip function')
-    parser.add_argument('-i', '--interactive', action='store_true', help='Activate interactive mode')
-    args = parser.parse_args()
-
-    if args.search:
-        search_src_ip()
-    elif args.bulk:
-        bulk_search_ip()
-    elif args.interactive:
-        interactive_mode()
+    # Check if FSD entropy is below threshold alpha
+    if fsd < alpha:
+        # Update ratio with successful event
+        ratio *= (1/0.9) / (1/0.1) * (0.9/0.1) / (0.1/0.9)
     else:
-        parser.print_help()
+        # Update ratio with unsuccessful event
+        ratio *= 0.1 / 0.9
+
+    # Check if updated ratio is above upper threshold eta1
+    if ratio >= eta1:
+        # Flag srcip as a scanner and remove from Candidate hash table
+        del Candidate[srcip]
+        print(f"{srcip} is a scanner!")
+    # Check if updated ratio is below lower threshold eta0
+    elif ratio <= eta0:
+        # Remove srcip from Candidate hash table
+        del Candidate[srcip]
+    else:
+        # Update likelihood ratio for srcip in Candidate hash table
+        Candidate[srcip] = ratio
+
+# Simulate flow data
+flows = [
+    ("192.168.1.1", 100),
+    ("192.168.1.1", 200),
+    ("192.168.1.1", 150),
+    ("192.168.1.2", 50),
+    ("192.168.1.2", 75),
+    ("192.168.1.2", 80),
+    ("192.168.1.3", 40),
+    ("192.168.1.3", 60),
+    ("192.168.1.4", 200),
+    ("192.168.1.4", 150),
+    ("192.168.1.5", 100),
+    ("192.168.1.6", 100),
+]
+
+# Process flows
+for srcip, size in flows:
+    # Update flow count for srcip in Source hash table
+    Source[srcip][0] += 1
+    # Update flow size distribution for srcip in Source hash table
+    if size in Source[srcip][1]:
+        Source[srcip][1][size] += 1
+    else:
+        Source[srcip][1][size] = 1
+    # Calculate FSD entropy for srcip
+    counts = list(Source[srcip][1].values())
+    total = sum(counts)
+    ps = [c/total for c in counts]
+    entropy = -sum([p * math.log2(p) for p in ps])
+    Source[srcip][2] = entropy
+    # Update likelihood ratio for srcip
+    update(srcip, entropy)
