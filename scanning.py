@@ -1,81 +1,67 @@
-import collections
-import math
+import pandas as pd
+import json
+from dataclasses import dataclass
+from typing import List
 
-# Initialize hash tables
-Source = collections.defaultdict(lambda: [0, 0])
-Candidate = collections.defaultdict(int)
+# set the values for the TFDS criteria
+c = 100  # minimum number of flows for a source to be considered
+alpha = 0.5  # threshold for observed FSD entropy
+eta1 = 10  # threshold for likelihood ratio to flag as scanner
+eta0 = 0.1  # threshold for likelihood ratio to remove from Candidate
 
-# Set threshold values
-c = 5 # minimum number of flows required to calculate FSD entropy
-alpha = 0.5 # threshold for FSD entropy
-eta0 = 0.5 # lower threshold for likelihood ratio
-eta1 = 1.5 # upper threshold for likelihood ratio
+@dataclass
+class Record:
+    src_ip: str
+    dest_ip: str
+    dest_port: int
+    action: str
 
-def update(srcip, fsd):
-    """
-    Update likelihood ratio for srcip based on FSD entropy.
-    """
-    # Get current likelihood ratio for srcip
-    ratio = Candidate[srcip]
-    # If srcip has not been seen before, set ratio to 1
-    if ratio == 0:
-        ratio = 1
+# read the CSV file into a Pandas DataFrame
+df = pd.read_csv('input.csv')
 
-    # Check if srcip has enough flows to calculate FSD entropy
-    if Source[srcip][0] < c:
-        return
+# create an empty dictionary to store the Source and Candidate hash tables
+Source = {}
+Candidate = {}
 
-    # Check if FSD entropy is below threshold alpha
-    if fsd < alpha:
-        # Update ratio with successful event
-        ratio *= (1/0.9) / (1/0.1) * (0.9/0.1) / (0.1/0.9)
+# iterate over each row in the DataFrame
+for index, row in df.iterrows():
+    # create a Record object from the row data
+    record = Record(row['source_ip'], row['dest_ip'], row['dest_port'], row['action'])
+    
+    # add the Record object to the Source hash table
+    if record.src_ip in Source:
+        Source[record.src_ip]['flowcount'] += 1
     else:
-        # Update ratio with unsuccessful event
-        ratio *= 0.1 / 0.9
+        Source[record.src_ip] = {'flowcount': 1}
+    
+    # update the FSD entropy for the source in the Source hash table
+    source_counts = [count['count'] for count in Source[record.src_ip]['counts']]
+    source_counts.append(1)
+    Source[record.src_ip]['counts'] = [{'count': count, 'freq': source_counts.count(count)/len(source_counts)} 
+                                       for count in set(source_counts)]
+    Source[record.src_ip]['fsd'] = -sum([count['freq']*math.log(count['freq'], 2) for count in Source[record.src_ip]['counts']])
+    
+    # update the likelihood ratio for the source in the Candidate hash table
+    if Source[record.src_ip]['flowcount'] >= c:
+        if record.src_ip not in Candidate:
+            Candidate[record.src_ip] = 1
+        else:
+            ratio = Candidate[record.src_ip]
+            if Source[record.src_ip]['fsd'] < alpha:
+                ratio *= (1/Pr_Y1_H1)*((Source[record.src_ip]['flowcount']+1)/Pr_Y1_H0)
+            else:
+                ratio *= (1-Pr_Y1_H1)*Pr_Y0_H0/Source[record.src_ip]['flowcount']
+            Candidate[record.src_ip] = ratio
+            if ratio >= eta1:
+                del Candidate[record.src_ip]
+                # add the source to the selected_ips list to indicate it is a scanner
+                selected_ips.append(record.src_ip)
+            elif ratio <= eta0:
+                del Candidate[record.src_ip]
 
-    # Check if updated ratio is above upper threshold eta1
-    if ratio >= eta1:
-        # Flag srcip as a scanner and remove from Candidate hash table
-        del Candidate[srcip]
-        print(f"{srcip} is a scanner!")
-    # Check if updated ratio is below lower threshold eta0
-    elif ratio <= eta0:
-        # Remove srcip from Candidate hash table
-        del Candidate[srcip]
-    else:
-        # Update likelihood ratio for srcip in Candidate hash table
-        Candidate[srcip] = ratio
+# convert the selected_ips list to a JSON string
+json_str = json.dumps(selected_ips)
 
-# Simulate flow data
-flows = [
-    ("192.168.1.1", 100),
-    ("192.168.1.1", 200),
-    ("192.168.1.1", 150),
-    ("192.168.1.2", 50),
-    ("192.168.1.2", 75),
-    ("192.168.1.2", 80),
-    ("192.168.1.3", 40),
-    ("192.168.1.3", 60),
-    ("192.168.1.4", 200),
-    ("192.168.1.4", 150),
-    ("192.168.1.5", 100),
-    ("192.168.1.6", 100),
-]
-
-# Process flows
-for srcip, size in flows:
-    # Update flow count for srcip in Source hash table
-    Source[srcip][0] += 1
-    # Update flow size distribution for srcip in Source hash table
-    if size in Source[srcip][1]:
-        Source[srcip][1][size] += 1
-    else:
-        Source[srcip][1][size] = 1
-    # Calculate FSD entropy for srcip
-    counts = list(Source[srcip][1].values())
-    total = sum(counts)
-    ps = [c/total for c in counts]
-    entropy = -sum([p * math.log2(p) for p in ps])
-    Source[srcip][2] = entropy
-    # Update likelihood ratio for srcip
-    update(srcip, entropy)
+# write the JSON string to a file
+with open('output.json', 'w') as outfile:
+    outfile.write(json_str)
