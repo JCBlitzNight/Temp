@@ -1,67 +1,45 @@
-import pandas as pd
+import requests
 import json
-from dataclasses import dataclass
-from typing import List
 
-# set the values for the TFDS criteria
-c = 100  # minimum number of flows for a source to be considered
-alpha = 0.5  # threshold for observed FSD entropy
-eta1 = 10  # threshold for likelihood ratio to flag as scanner
-eta0 = 0.1  # threshold for likelihood ratio to remove from Candidate
+API_URL = 'https://censys.io/api/v1'
+API_ID = 'YOUR_API_ID'
+API_SECRET = 'YOUR_API_SECRET'
 
-@dataclass
-class Record:
-    src_ip: str
-    dest_ip: str
-    dest_port: int
-    action: str
+def censys_ip_query(ip):
+    endpoint = f"/view/ipv4/{ip}"
+    return censys_api_request(endpoint)
 
-# read the CSV file into a Pandas DataFrame
-df = pd.read_csv('input.csv')
+def censys_bulk_ip_query(ips):
+    endpoint = '/search/ipv4'
+    data = {'query': ' OR '.join(ips)}
+    return censys_api_request(endpoint, data)
 
-# create an empty dictionary to store the Source and Candidate hash tables
-Source = {}
-Candidate = {}
-
-# iterate over each row in the DataFrame
-for index, row in df.iterrows():
-    # create a Record object from the row data
-    record = Record(row['source_ip'], row['dest_ip'], row['dest_port'], row['action'])
+def censys_api_request(endpoint, data=None):
+    url = f"{API_URL}{endpoint}"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }
+    auth = (API_ID, API_SECRET)
     
-    # add the Record object to the Source hash table
-    if record.src_ip in Source:
-        Source[record.src_ip]['flowcount'] += 1
-    else:
-        Source[record.src_ip] = {'flowcount': 1}
-    
-    # update the FSD entropy for the source in the Source hash table
-    source_counts = [count['count'] for count in Source[record.src_ip]['counts']]
-    source_counts.append(1)
-    Source[record.src_ip]['counts'] = [{'count': count, 'freq': source_counts.count(count)/len(source_counts)} 
-                                       for count in set(source_counts)]
-    Source[record.src_ip]['fsd'] = -sum([count['freq']*math.log(count['freq'], 2) for count in Source[record.src_ip]['counts']])
-    
-    # update the likelihood ratio for the source in the Candidate hash table
-    if Source[record.src_ip]['flowcount'] >= c:
-        if record.src_ip not in Candidate:
-            Candidate[record.src_ip] = 1
-        else:
-            ratio = Candidate[record.src_ip]
-            if Source[record.src_ip]['fsd'] < alpha:
-                ratio *= (1/Pr_Y1_H1)*((Source[record.src_ip]['flowcount']+1)/Pr_Y1_H0)
-            else:
-                ratio *= (1-Pr_Y1_H1)*Pr_Y0_H0/Source[record.src_ip]['flowcount']
-            Candidate[record.src_ip] = ratio
-            if ratio >= eta1:
-                del Candidate[record.src_ip]
-                # add the source to the selected_ips list to indicate it is a scanner
-                selected_ips.append(record.src_ip)
-            elif ratio <= eta0:
-                del Candidate[record.src_ip]
+    try:
+        response = requests.post(url, headers=headers, auth=auth, data=json.dumps(data))
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
 
-# convert the selected_ips list to a JSON string
-json_str = json.dumps(selected_ips)
+# Example usage for single IP query
+ip_address = '8.8.8.8'
+response = censys_ip_query(ip_address)
+if response:
+    print(f"Results for {ip_address}:")
+    print(response)
 
-# write the JSON string to a file
-with open('output.json', 'w') as outfile:
-    outfile.write(json_str)
+# Example usage for bulk IP query
+ip_addresses = ['8.8.8.8', '1.1.1.1']
+response = censys_bulk_ip_query(ip_addresses)
+if response:
+    print("Bulk results:")
+    print(response)
