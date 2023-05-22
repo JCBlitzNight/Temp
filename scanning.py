@@ -1,34 +1,15 @@
-import requests
-import json
+from censys import search
 
-API_URL = 'https://censys.io/api/v1'
 API_ID = 'YOUR_API_ID'
 API_SECRET = 'YOUR_API_SECRET'
 
 def censys_ip_query(ip):
-    endpoint = f"/view/ipv4/{ip}"
-    return censys_api_request(endpoint)
+    c = search.CensysIPv4(API_ID, API_SECRET)
+    return c.view(ip)
 
 def censys_bulk_ip_query(ips):
-    endpoint = '/search/ipv4'
-    data = {'query': ' OR '.join(ips)}
-    return censys_api_request(endpoint, data)
-
-def censys_api_request(endpoint, data=None):
-    url = f"{API_URL}{endpoint}"
-    headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    }
-    auth = (API_ID, API_SECRET)
-    
-    try:
-        response = requests.post(url, headers=headers, auth=auth, data=json.dumps(data))
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return None
+    c = search.CensysIPv4(API_ID, API_SECRET)
+    return c.search(' OR '.join(ips))
 
 # Example usage for single IP query
 ip_address = '8.8.8.8'
