@@ -1,26 +1,36 @@
-from censys import search
+import ipaddress
+import csv
 
-API_ID = 'YOUR_API_ID'
-API_SECRET = 'YOUR_API_SECRET'
+# Path to the CSV file
+csv_file = 'path/to/csv/file.csv'
 
-def censys_ip_query(ip):
-    c = search.CensysIPv4(API_ID, API_SECRET)
-    return c.view(ip)
+# Path to the text file containing IP addresses
+ip_file = 'path/to/ip/file.txt'
 
-def censys_bulk_ip_query(ips):
-    c = search.CensysIPv4(API_ID, API_SECRET)
-    return c.search(' OR '.join(ips))
+# Read IP ranges and countries from the CSV file
+ip_ranges = {}
+with open(csv_file, 'r') as file:
+    csv_reader = csv.reader(file)
+    for row in csv_reader:
+        ip_range = row[0]
+        country = row[1]
+        ip_ranges[ip_range] = country
 
-# Example usage for single IP query
-ip_address = '8.8.8.8'
-response = censys_ip_query(ip_address)
-if response:
-    print(f"Results for {ip_address}:")
-    print(response)
+# Function to check if an IP address falls within a subnet
+def ip_in_subnet(ip, subnet):
+    ip_obj = ipaddress.ip_address(ip)
+    network_obj = ipaddress.ip_network(subnet)
+    return ip_obj in network_obj
 
-# Example usage for bulk IP query
-ip_addresses = ['8.8.8.8', '1.1.1.1']
-response = censys_bulk_ip_query(ip_addresses)
-if response:
-    print("Bulk results:")
-    print(response)
+# Process each IP address from the text file
+with open(ip_file, 'r') as file:
+    for line in file:
+        ip = line.strip()
+        found = False
+        for subnet in ip_ranges:
+            if ip_in_subnet(ip, subnet):
+                print(f'{ip}: {ip_ranges[subnet]}')
+                found = True
+                break
+        if not found:
+            print(f'{ip}: Unknown')
