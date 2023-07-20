@@ -1,43 +1,73 @@
-import ipaddress
-import csv
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AmCharts 4 Pie Chart Example</title>
+  <script src="path_to_amcharts_core.js"></script>
+  <script src="path_to_amcharts_charts.js"></script>
+  <script src="path_to_amcharts_animated.js"></script>
+</head>
+<body>
+  <div id="chartdiv" style="width: 100%; height: 500px;"></div>
+  <script>
+    am4core.ready(function() {
+      // Chart data will be dynamically added here using Python
+      var chartData = {{data}};
 
-# Path to the CSV file
-csv_file = 'path/to/csv/file.csv'
+      // Create a chart instance
+      var chart = am4core.create("chartdiv", am4charts.PieChart);
 
-# Path to the text file containing IP addresses
-ip_file = 'path/to/ip/file.txt'
+      // Add data
+      chart.data = chartData;
 
-# Output file path
-output_file = 'path/to/output/file.txt'
+      // Create pie series
+      var series = chart.series.push(new am4charts.PieSeries());
+      series.dataFields.value = "value";
+      series.dataFields.category = "category";
 
-# Read IP ranges, ISPs, and countries from the CSV file
-ip_ranges = {}
-with open(csv_file, 'r') as file:
-    csv_reader = csv.reader(file)
-    next(csv_reader)  # Skip the first row
-    for row in csv_reader:
-        country = row[0]
-        ip_range = row[1]
-        isp = row[2]
-        ip_ranges[ip_range] = isp
+      // Add labels to the pie chart
+      series.labels.template.disabled = true;
+      series.ticks.template.disabled = true;
+      series.slices.template.tooltipText = "{category}: {value.value}";
 
-# Function to check if an IP address falls within a subnet
-def ip_in_subnet(ip, subnet):
-    ip_obj = ipaddress.ip_address(ip)
-    network_obj = ipaddress.ip_network(subnet)
-    return ip_obj in network_obj
+      // Enable animations
+      chart.innerRadius = am4core.percent(40);
+      series.hiddenState.properties.endAngle = -90;
+    });
+  </script>
+</body>
+</html>
 
-# Open output file in write mode
-with open(output_file, 'w') as output:
-    # Process each IP address from the text file
-    with open(ip_file, 'r') as file:
-        for line in file:
-            ip = line.strip()
-            found = False
-            for subnet in ip_ranges:
-                if ip_in_subnet(ip, subnet):
-                    output.write(f'{ip}: {ip_ranges[subnet]}\n')
-                    found = True
-                    break
-            if not found:
-                output.write(f'{ip}: Unknown\n')
+
+
+
+import json
+
+# Assuming the JSON data is in a file called "data.json"
+with open('data.json', 'r') as file:
+    json_data = json.load(file)
+
+# Extract values for the keys "person" and "luck"
+persons = [json_data[key]["person"] for key in json_data]
+lucks = [json_data[key]["luck"] for key in json_data]
+
+# Get Counters for unique values
+unique_person_counter = Counter(persons)
+unique_luck_counter = Counter(lucks)
+
+# Get top 20 values for "person" and "luck"
+top_20_person = unique_person_counter.most_common(20)
+top_20_luck = unique_luck_counter.most_common(20)
+
+# Generate data for the AmCharts pie chart
+person_data = [{"category": person, "value": count} for person, count in top_20_person]
+luck_data = [{"category": luck, "value": count} for luck, count in top_20_luck]
+
+# Load the chart template and replace placeholders with the generated data
+with open('chart_template.html', 'r') as template_file:
+    chart_template = template_file.read()
+
+chart_template = chart_template.replace("{{data}}", json.dumps(person_data))
+
+# Save the chart data to a new HTML file
+with open('generated_chart.html', 'w') as output_file:
+    output_file.write(chart_template)
