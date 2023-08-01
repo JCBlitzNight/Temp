@@ -1,15 +1,21 @@
-When I started, I planned to expand my skills in threat detection, incident response, and security operations. I wanted to gain hands-on experience investigating threats and responding to incidents. I also aimed to understand the company's security stack and processes.
+Technical Work
 
-Over the past month, I have accomplished several goals and participated in many learning experiences. I completed all required compliance and security trainings, including internal compliance training, cloud security training, threat hunting training, and forensic training. These courses expanded my knowledge of compliance frameworks, cloud threats, proactive threat hunting, and digital forensics.
+Over the past month, I have accomplished several technical goals and learned many new skills. I completed compliance and security trainings on topics like cloud threats, threat hunting, and digital forensics. These expanded my knowledge across key security domains.
 
-I actively participated in the security operations center, investigating nearly a dozen network and email alerts. For network alerts, I followed standard operating procedures to isolate affected systems, collect forensic data, and determine the root cause. In one investigation, I identified communication to a known malicious domain, prompting blocking of the domain across our environment. For email alerts, I analyzed headers and contents to validate legitimacy. These investigations sharpened my alert triage and analysis skills.
+In the security operations center, I investigated nearly a dozen network and email alerts. I followed procedures to isolate systems, collect forensics, and identify root causes. In one case, I pinpointed communication to a malicious domain and helped block it environment-wide. These investigations improved my alert triage and analysis abilities.
 
-I also attended several training sessions covering personal branding, investigation techniques, security vendor evaluations, and more. A notable session demonstrated forensic techniques for web browser artifacts. This showed me a new source of valuable user activity data. I look forward to applying these learnings during future investigations.
+I also attended trainings on personal branding, investigation techniques, security tools, and more. A notable session demonstrated forensic techniques for browser artifacts, showing me a new source of valuable user data. I look forward to applying these skills during future investigations.
 
-Beyond technical work, I attended organizational town halls and management sessions. These provided visibility into company strategy and culture. I appreciated the insights from senior leaders on their career experiences. The networking opportunities expanded my professional relationships.
+Non-Technical Work
 
-Overall, the internship has exceeded my expectations. I utilized industry-leading tools to detect and respond to real threats. My knowledge has grown tremendously across security domains. I have also developed meaningful connections with teammates.
+Beyond technical work, I gained exposure to the company's culture and strategy. I attended organizational town halls and management sessions. These provided insights into senior leaders' experiences and company direction.
 
-In the coming weeks, I look forward to more hands-on investigative work. I have been assigned several incidents to lead, which will test my ability to effectively respond under pressure. I also plan to shadow senior analysts during major incident response scenarios. My goals are to refine documentation practices for investigations based on supervisor feedback, and master email header analysis techniques.
+I appreciated the networking opportunities which allowed me to expand professional relationships. The sessions were invaluable for understanding the company's priorities and work environment.
 
-This internship has reaffirmed my passion for cybersecurity. The fast-paced operations center environment keeps me engaged daily. I am constantly learning new skills and working to improve. My experiences so far have prepared me well for a full-time career in the field. I am grateful for the opportunity to work with such talented professionals at XYZ Company.
+Challenges
+
+While the internship has been rewarding, I faced some challenges along the way. Early on, I struggled with inconsistent documentation during investigations. However, based on supervisor feedback, I identified areas to improve including more concise and standardized note taking.
+
+I also found email header analysis complex at first. But after hands-on practice and training, I became more capable with parsing headers to validate emails. I will continue working to master email analysis techniques.
+
+Overall, these challenges ultimately helped me develop new skills. By recognizing my weaknesses, I could set clear goals to level up those abilities. The roadblocks kept me humble and drove me to continuously improve.
