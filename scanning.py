@@ -1,57 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <!-- Your head content here -->
-    <body class="bg-gray-100 text-gray-900 px-4 py-8">
-        <div class="container mx-auto" x-data="getUsers()">
-            <input
-                x-ref="searchInput"
-                x-model="search"
-                x-on:keydown.window.prevent.slash="$refs.searchInput.focus()"
-                placeholder="Search for an IP address..."
-                type="search"
-                class="block w-full rounded bg-gray-200 p-4 mb-4"
-            />
-            <table x-show="searchResult" class="table-auto border-collapse w-full">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 bg-gray-200 text-left">IP Address</th>
-                        <th class="px-4 py-2 bg-gray-200 text-left">Country</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border px-4 py-2" x-text="searchResult.ip"></td>
-                        <td class="border px-4 py-2" x-text="searchResult.country"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <script>
-            function getUsers() {
-                return {
-                    search: '',
-                    searchResult: null,
-                    async findUser() {
-                        if (this.search === '') {
-                            this.searchResult = null;
-                            return;
-                        }
+When I started, I planned to expand my skills in threat detection, incident response, and security operations. I wanted to gain hands-on experience investigating threats and responding to incidents. I also aimed to understand the company's security stack and processes.
 
-                        try {
-                            const response = await fetch('data.json'); // Replace 'data.json' with the actual file path
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch data.');
-                            }
-                            const data = await response.json();
-                            const result = data.find((entry) => entry.ip === this.search);
+Over the past month, I have accomplished several goals and participated in many learning experiences. I completed all required compliance and security trainings, including internal compliance training, cloud security training, threat hunting training, and forensic training. These courses expanded my knowledge of compliance frameworks, cloud threats, proactive threat hunting, and digital forensics.
 
-                            this.searchResult = result || null;
-                        } catch (error) {
-                            console.error(error);
-                        }
-                    },
-                };
-            }
-        </script>
-    </body>
-</html>
+I actively participated in the security operations center, investigating nearly a dozen network and email alerts. For network alerts, I followed standard operating procedures to isolate affected systems, collect forensic data, and determine the root cause. In one investigation, I identified communication to a known malicious domain, prompting blocking of the domain across our environment. For email alerts, I analyzed headers and contents to validate legitimacy. These investigations sharpened my alert triage and analysis skills.
+
+I also attended several training sessions covering personal branding, investigation techniques, security vendor evaluations, and more. A notable session demonstrated forensic techniques for web browser artifacts. This showed me a new source of valuable user activity data. I look forward to applying these learnings during future investigations.
+
+Beyond technical work, I attended organizational town halls and management sessions. These provided visibility into company strategy and culture. I appreciated the insights from senior leaders on their career experiences. The networking opportunities expanded my professional relationships.
+
+Overall, the internship has exceeded my expectations. I utilized industry-leading tools to detect and respond to real threats. My knowledge has grown tremendously across security domains. I have also developed meaningful connections with teammates.
+
+In the coming weeks, I look forward to more hands-on investigative work. I have been assigned several incidents to lead, which will test my ability to effectively respond under pressure. I also plan to shadow senior analysts during major incident response scenarios. My goals are to refine documentation practices for investigations based on supervisor feedback, and master email header analysis techniques.
+
+This internship has reaffirmed my passion for cybersecurity. The fast-paced operations center environment keeps me engaged daily. I am constantly learning new skills and working to improve. My experiences so far have prepared me well for a full-time career in the field. I am grateful for the opportunity to work with such talented professionals at XYZ Company.
