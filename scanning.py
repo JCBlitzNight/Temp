@@ -1,21 +1,73 @@
-Technical Work
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IP Address Table</title>
+  
+  <!-- Tailwind CSS -->
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> 
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
 
-Over the past month, I have accomplished several technical goals and learned many new skills. I completed compliance and security trainings on topics like cloud threats, threat hunting, and digital forensics. These expanded my knowledge across key security domains.
+<body class="p-4">
 
-In the security operations center, I investigated nearly a dozen network and email alerts. I followed procedures to isolate systems, collect forensics, and identify root causes. In one case, I pinpointed communication to a malicious domain and helped block it environment-wide. These investigations improved my alert triage and analysis abilities.
+  <h1 class="text-2xl font-bold mb-4">IP Address Search</h1>
+  
+  <div>
+    <input id="ipInput" type="text" placeholder="Enter valid public IP" class="border p-2">
+    <button id="searchBtn" class="bg-blue-500 text-white px-4 py-2">Search</button>
+  </div>
+  
+  <table id="ipTable" class="hidden mt-8 table-auto border-collapse">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="border p-2">IP Address</th>
+        <th class="border p-2">Location</th>
+        <th class="border p-2">ISP</th>
+        <th class="border p-2">Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
 
-I also attended trainings on personal branding, investigation techniques, security tools, and more. A notable session demonstrated forensic techniques for browser artifacts, showing me a new source of valuable user data. I look forward to applying these skills during future investigations.
+  <script>
+    // Validate IP on input
+    $('#ipInput').on('input', function() {
+      var ip = $(this).val(); 
+      if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) {
+        $(this).addClass('border-red-500');
+      } else {
+        $(this).removeClass('border-red-500');
+      }
+    });
 
-Non-Technical Work
+    // Search click handler
+    $('#searchBtn').click(function() {
+      var ip = $('#ipInput').val();
+      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) {
+        $.getJSON('db.json', function(data) {
+          var info = data[ip];
+          
+          // Clear table
+          $('#ipTable tbody').empty(); 
+          
+          // Add row to table
+          var row = '<tr>';
+          row += '<td class="border p-2">' + ip + '</td>';
+          row += '<td class="border p-2">' + info.location + '</td>';
+          row += '<td class="border p-2">' + info.isp + '</td>';
+          row += '<td class="border p-2">' + info.tags.join(', ') + '</td>';
+          row += '</tr>';
+          $('#ipTable tbody').append(row);
+          
+          // Show table
+          $('#ipTable').removeClass('hidden');
+        });
+      }
+    });
+  </script>
 
-Beyond technical work, I gained exposure to the company's culture and strategy. I attended organizational town halls and management sessions. These provided insights into senior leaders' experiences and company direction.
-
-I appreciated the networking opportunities which allowed me to expand professional relationships. The sessions were invaluable for understanding the company's priorities and work environment.
-
-Challenges
-
-While the internship has been rewarding, I faced some challenges along the way. Early on, I struggled with inconsistent documentation during investigations. However, based on supervisor feedback, I identified areas to improve including more concise and standardized note taking.
-
-I also found email header analysis complex at first. But after hands-on practice and training, I became more capable with parsing headers to validate emails. I will continue working to master email analysis techniques.
-
-Overall, these challenges ultimately helped me develop new skills. By recognizing my weaknesses, I could set clear goals to level up those abilities. The roadblocks kept me humble and drove me to continuously improve.
+</body>
+</html>
