@@ -1,30 +1,68 @@
-// Download button
-$('#download-btn').on('click', function() {
+import csv
+import datetime
+from splunklib import client
 
-  // Get selected slice
-  var selectedSlice = series.slices.getIndex(series.slices.getSelected());
+SPLUNK_HOST = "your_splunk_host"
+SPLUNK_PORT = 8089  
+SPLUNK_USERNAME = "your_username"
+SPLUNK_PASSWORD = "your_password"
 
-  // Get data
-  var ipData = selectedSlice.dataItem.dataContext;
-  var ips = ipData.ips;
+searchearliest = "2022-09-22 00:00:00"  
+searchlatest = "2022-09-23 00:00:00"
 
-  // Create text blob
-  var textBlob = new Blob([ips.join('\n')], {type: 'text/plain'});
+service = client.connect(
+   host=SPLUNK_HOST, 
+   port=SPLUNK_PORT,
+   username=SPLUNK_USERNAME,
+   password=SPLUNK_PASSWORD
+)
 
-  // Generate download link
-  var downloadLink = $('<a>').attr({
-    download: 'ips_' + ipData.tag + '.txt',
-    href: window.URL.createObjectURL(textBlob)
-  });
+jobs_per_interval = 4
+max_result_rows = 50000 
 
-  // Click download link
-  $('body').append(downloadLink);
-  downloadLink[0].click();
-  downloadLink.remove();
+starttime = datetime.datetime.strptime(searchearliest, "%Y-%m-%d %H:%M:%S")
+endtime = datetime.datetime.strptime(searchlatest, "%Y-%m-%d %H:%M:%S")
 
-});
+timedelta = (endtime - starttime) / 16
 
-// Get selected slice
-function getSelectedSlice() {
-  return series.slices.getIndex(series.slices.getSelected()); 
-}
+for i in range(16):
+
+    interval_start = starttime + i*timedelta
+    interval_end = interval_start + timedelta
+
+    for j in range(jobs_per_interval):
+
+        job_start = interval_start + j*(timedelta/jobs_per_interval) 
+        job_end = job_start + (timedelta/jobs_per_interval)
+
+        searchquery_time = "%s %s" % (job_start.strftime("%Y-%m-%d %H:%M:%S"), job_end.strftime("%Y-%m-%d %H:%M:%S"))
+
+        searchquery = "search * | timechart span={} count".format(searchquery_time)
+
+        job = service.jobs.create(searchquery, count=max_result_rows)
+
+        while True:
+            job.refresh()  
+            if job["isDone"] == "1":
+                break
+
+        results = []
+        
+        offset = 0
+        reader = job.results(count=max_result_rows, offset=offset)
+        while reader:
+            results.extend(list(reader))
+            offset += max_result_rows 
+            reader = job.results(count=max_result_rows, offset=offset)
+            
+        # Output results to CSV  
+        hr1 = int(interval_start.strftime("%H"))
+        hr2 = int(interval_end.strftime("%H"))
+            
+        filename = "cp_{}_{}.csv".format(str(hr1).zfill(2), str(hr2).zfill(2))
+        
+        with open(filename, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(results)
+
+print("Search jobs completed, full results saved in CSV files")
