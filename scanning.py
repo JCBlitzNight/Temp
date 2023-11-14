@@ -1,13 +1,28 @@
-During my 3 month internship, I gained valuable hands-on experience in cybersecurity investigations and analysis. I successfully completed many security investigations across endpoint, email, network, and cloud domains, developing my investigative skills and techniques.
+Phase 1:
 
-Through attending internal training sessions and peer knowledge sharing, I expanded my understanding of malware identification, active directory attacks, and other cybersecurity topics.
+    Completed onboarding and training on security tools and infrastructure
+    Learned the importance of an open and collaborative culture to enhance productivity
+    Developed foundational skills in security operations through job shadowing and hands-on experience
+    Gained soft skills through workshops on presentation delivery and conflict management
+    Presented learnings from a presentation workshop to my team
+    Challenged by adapting to the open culture, but improved by expanding my network
 
-Alongside technical work, I participated in activities to develop professionally and engage with the cybersecurity community.
+Phase 2:
 
-I consistently attended technical and non-technical training, including a 5-day Splunk administration course, to strengthen my skillset. Knowledge sharing with experienced teammates also allowed me to learn about real-world attacks.
+    Expanded technical skills through trainings on cloud, threat hunting, digital forensics
+    Applied learnings in investigating real network, email, and file events
+    Developed expertise in analyzing office documents, PDFs, and web code for threats
+    Parsed email headers and sender info to uncover phishing attempts
+    Struggled with documentation initially but improved through supervisor feedback
+    Gained insights into department strategy through town halls
+    Networked with senior management through sharing panels
 
-Participating in Splunk's BOTS competition reinforced skills like collaboration, communication, and documentation when responding to security incidents.
+Phase 3:
 
-I also connected with senior leaders through informational interviews and engagement events to get guidance on building a successful cybersecurity career.
-
-Additionally, I volunteered at the UWS STEM festival, serving as a mentor in a cybersecurity workshop for high school students. This allowed me to develop my communication abilities while giving back to the community.
+    Successfully investigated incidents across various domains
+    Refined investigative approach through supervisor feedback
+    Accelerated technical abilities through hands-on work and training
+    Learned advanced techniques and real world scenarios through knowledge shares
+    Applied skills in Splunk BOTS competition with team members
+    Connected with leaders through interviews and mentorship
+    Volunteered to teach young women about cybersecurity at a STEM festival
