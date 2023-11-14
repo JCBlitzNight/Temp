@@ -3,14 +3,16 @@ During my 3 month internship, I gained valuable hands-on experience in cybersecu
 Through attending internal training sessions and peer knowledge sharing, I expanded my understanding of malware identification, active directory attacks, and other cybersecurity topics.
 
 Non-Technical Work
-Alongside technical work, I participated in activities to develop professionally and engage with the cybersecurity community.
+Training and Knowledge Sharing
+I consistently attended technical and non-technical training offerings to expand my skills. For example, I completed a 5-day Splunk Power User training to better leverage Splunk in investigations. I also attended training on communication, time management, and other professional topics. Peer knowledge sharing events were valuable for learning from experienced teammates. I learned about real-world active directory attacks and malware through these discussions.
 
-I consistently attended technical and non-technical training, including a 5-day Splunk administration course, to strengthen my skillset. Knowledge sharing with experienced teammates also allowed me to learn about real-world attacks.
+Competitions
+I participated in Splunk's Boss of the SOC (BOTS) competition, an opportunity to apply my investigative skills in a simulated environment. My team was tasked with efficiently investigating and responding to a series of security incidents over 2 days. This high-pressure competition reinforced the need for collaboration, quick thinking, and effective documentation when responding to breaches.
 
-Participating in Splunk's BOTS competition reinforced skills like collaboration, communication, and documentation when responding to security incidents.
+Leadership Engagement
+I had the chance to connect with senior leaders through informational interviews and a leader connect session. This allowed me to learn from their extensive experience and get their insights on building a successful cybersecurity career. They provided excellent advice on positioning myself for future roles and responsibilities.
 
-I also connected with senior leaders through informational interviews and engagement events to get guidance on building a successful cybersecurity career.
+Community Outreach
+I volunteered at the UWS STEM festival, participating in an interactive workshop to teach high school girls about cybersecurity. I served as a mentor, walking through an encryption decoding exercise and explaining key cybersecurity concepts like CIA - confidentiality, integrity, and availability. Events like these allowed me to give back to the community while developing my communication abilities.
 
-Additionally, I volunteered at the UWS STEM festival, serving as a mentor in a cybersecurity workshop for high school students. This allowed me to develop my communication abilities while giving back to the community.
-
-In summary, this well-rounded internship provided diverse hands-on experience and learning opportunities that will enable me to excel as I continue my cybersecurity career. I'm thankful for the growth in both my technical and professional abilities.
+In summary, this internship provided me with diverse hands-on cybersecurity experience that strengthened my technical and professional skills. I am grateful for the learning opportunities that will enable me to excel in my future career protecting critical systems and data.
