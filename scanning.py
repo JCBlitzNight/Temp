@@ -1,68 +1,16 @@
-import csv
-import datetime
-from splunklib import client
+During my 3 month internship, I gained valuable hands-on experience in cybersecurity investigations and analysis. I successfully completed many security investigations across endpoint, email, network, and cloud domains, developing my investigative skills and techniques.
 
-SPLUNK_HOST = "your_splunk_host"
-SPLUNK_PORT = 8089  
-SPLUNK_USERNAME = "your_username"
-SPLUNK_PASSWORD = "your_password"
+Through attending internal training sessions and peer knowledge sharing, I expanded my understanding of malware identification, active directory attacks, and other cybersecurity topics.
 
-searchearliest = "2022-09-22 00:00:00"  
-searchlatest = "2022-09-23 00:00:00"
+Non-Technical Work
+Alongside technical work, I participated in activities to develop professionally and engage with the cybersecurity community.
 
-service = client.connect(
-   host=SPLUNK_HOST, 
-   port=SPLUNK_PORT,
-   username=SPLUNK_USERNAME,
-   password=SPLUNK_PASSWORD
-)
+I consistently attended technical and non-technical training, including a 5-day Splunk administration course, to strengthen my skillset. Knowledge sharing with experienced teammates also allowed me to learn about real-world attacks.
 
-jobs_per_interval = 4
-max_result_rows = 50000 
+Participating in Splunk's BOTS competition reinforced skills like collaboration, communication, and documentation when responding to security incidents.
 
-starttime = datetime.datetime.strptime(searchearliest, "%Y-%m-%d %H:%M:%S")
-endtime = datetime.datetime.strptime(searchlatest, "%Y-%m-%d %H:%M:%S")
+I also connected with senior leaders through informational interviews and engagement events to get guidance on building a successful cybersecurity career.
 
-timedelta = (endtime - starttime) / 16
+Additionally, I volunteered at the UWS STEM festival, serving as a mentor in a cybersecurity workshop for high school students. This allowed me to develop my communication abilities while giving back to the community.
 
-for i in range(16):
-
-    interval_start = starttime + i*timedelta
-    interval_end = interval_start + timedelta
-
-    for j in range(jobs_per_interval):
-
-        job_start = interval_start + j*(timedelta/jobs_per_interval) 
-        job_end = job_start + (timedelta/jobs_per_interval)
-
-        searchquery_time = "%s %s" % (job_start.strftime("%Y-%m-%d %H:%M:%S"), job_end.strftime("%Y-%m-%d %H:%M:%S"))
-
-        searchquery = "search * | timechart span={} count".format(searchquery_time)
-
-        job = service.jobs.create(searchquery, count=max_result_rows)
-
-        while True:
-            job.refresh()  
-            if job["isDone"] == "1":
-                break
-
-        results = []
-        
-        offset = 0
-        reader = job.results(count=max_result_rows, offset=offset)
-        while reader:
-            results.extend(list(reader))
-            offset += max_result_rows 
-            reader = job.results(count=max_result_rows, offset=offset)
-            
-        # Output results to CSV  
-        hr1 = int(interval_start.strftime("%H"))
-        hr2 = int(interval_end.strftime("%H"))
-            
-        filename = "cp_{}_{}.csv".format(str(hr1).zfill(2), str(hr2).zfill(2))
-        
-        with open(filename, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerows(results)
-
-print("Search jobs completed, full results saved in CSV files")
+In summary, this well-rounded internship provided diverse hands-on experience and learning opportunities that will enable me to excel as I continue my cybersecurity career. I'm thankful for the growth in both my technical and professional abilities.
