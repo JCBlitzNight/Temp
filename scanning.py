@@ -1,25 +1,39 @@
 import ast
+import textwrap
 
-py_file = "mycode.py"  
+def generate_diagram(py_file):
+    classes = []
+    methods = []
+    current_class = None
 
-classes = []
-methods = [] 
-current_class = None
-
-with open(py_file) as f:
-    tree = ast.parse(f.read())
+    with open(py_file) as f:
+        tree = ast.parse(f.read())
+        
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                current_class = node.name 
+                classes.append(current_class)
+                
+            elif isinstance(node, ast.FunctionDef):
+                methods.append(f"{current_class}.{node.name}")
+       
+    print(f"// Generated from {py_file}")
     
-    for node in ast.walk(tree):
-        if isinstance(node, ast.ClassDef):
-            current_class = node.name 
-            classes.append(current_class)
-            
-        elif isinstance(node, ast.FunctionDef):
-            methods.append(f"{current_class}.{node.name}")
-            
-print(f"// Parsed from {py_file}")
-print("@startuml") 
+    print("@startuml")
+    
+    wrapper = textwrap.TextWrapper(initial_indent='\t',  
+                                   subsequent_indent='\t')
+                                   
+    for c in classes:
+        print(f"class {c} {{")
+        
+        class_methods = [m.split('.')[-1] for m in methods if c in m]  
+        printed_methods = wrapper.fill(" ".join(class_methods))
+        print(printed_methods)
 
-# Print plantuml diagram
+        print("}\n")
 
-print("@enduml")
+    print("@enduml")
+
+    
+generate_diagram("mycode.py")
