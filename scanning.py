@@ -1,23 +1,25 @@
 import ast
-import textwrap
 
-py_file = "mycode.py"
+py_file = "mycode.py"  
 
-classes = []  
-methods = []
+classes = []
+methods = [] 
+current_class = None
 
 with open(py_file) as f:
     tree = ast.parse(f.read())
     
     for node in ast.walk(tree):
         if isinstance(node, ast.ClassDef):
-            classes.append(node.name)
-        elif isinstance(node, ast.FunctionDef): 
-            methods.append(f"{node.parent.name}.{node.name}")
+            current_class = node.name 
+            classes.append(current_class)
             
-print(f"// Parsed from {py_file}")                
-print("@startuml")
+        elif isinstance(node, ast.FunctionDef):
+            methods.append(f"{current_class}.{node.name}")
+            
+print(f"// Parsed from {py_file}")
+print("@startuml") 
 
-# Print class diagram like previous example 
+# Print plantuml diagram
 
 print("@enduml")
