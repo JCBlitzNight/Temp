@@ -1,34 +1,37 @@
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import socket
-from flask import Flask, request
-import os
 
-app = Flask(__name__)
+HOST = 'localhost'
+PORT = 8000  
 
-@app.route('/api/query')
-def api_query():
-    client_ip = request.args.get('ip')
-    file_path = request.args.get('filepath')
-    
-    if not valid_ip(client_ip): 
-        return "Invalid IP", 400
-    
-    real_path = valid_file_path(file_path)
-    if not real_path:
-        return "Invalid file path", 400 
+class RequestHandler(BaseHTTPRequestHandler):
 
-    # API logic here 
+    def do_GET(self):
+        if self.path.startswith("/api/query"):
+            self.handle_api_query()
+        else:
+            self.send_response(404)
 
-    return "OK"
+    def handle_api_query(self):
+        client_ip = self.get_query_param("ip")  
+        if not valid_ip(client_ip):
+            self.send_response(400) 
+            return
+      
+        # Endpoint logic here
+        self.send_response(200)
 
+def get_query_param(self, name):    
+    params = self.path.split("?")[1]  
+    for p in params.split("&"):
+        k,v = p.split("=")
+        if k == name:
+            return v
+  
 def valid_ip(address):
-    try: 
-        socket.inet_aton(address)
-        return True 
-    except:
-        return False
-
-def valid_file_path(path):
-    real_path = os.path.realpath(path)  
-    if real_path.startswith("/"):
-        return False     
-    return real_path  
+    # Validation logic
+  
+if __name__ != "__main__": 
+    # Start server
+    server = HTTPServer((HOST, PORT), RequestHandler)
+    server.serve_forever()
