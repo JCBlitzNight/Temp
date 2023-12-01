@@ -1,39 +1,37 @@
-import ast
-import textwrap
+import socket
+from flask import Flask, request
+app = Flask(__name__)
 
-def generate_diagram(py_file):
-    classes = []
-    methods = []
-    current_class = None
-
-    with open(py_file) as f:
-        tree = ast.parse(f.read())
-        
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef):
-                current_class = node.name 
-                classes.append(current_class)
-                
-            elif isinstance(node, ast.FunctionDef):
-                methods.append(f"{current_class}.{node.name}")
-       
-    print(f"// Generated from {py_file}")
+@app.route('/api/query')
+def api_query():
+    client_ip = request.args.get('ip') 
+    file_path = request.args.get('filepath')
     
-    print("@startuml")
+    if not valid_ip(client_ip):
+        return "Invalid IP", 400
     
-    wrapper = textwrap.TextWrapper(initial_indent='\t',  
-                                   subsequent_indent='\t')
-                                   
-    for c in classes:
-        print(f"class {c} {{")
-        
-        class_methods = [m.split('.')[-1] for m in methods if c in m]  
-        printed_methods = wrapper.fill(" ".join(class_methods))
-        print(printed_methods)
+    real_path = valid_file_path(file_path)
+    if not real_path:  
+        return "Invalid file path access", 400
 
-        print("}\n")
+    # Additional logic with valid inputs   
+    ...
 
-    print("@enduml")
+    return output
 
-    
-generate_diagram("mycode.py")
+def valid_ip(address):
+    try: 
+        socket.inet_aton(address)
+        return True
+
+    except:
+        return False
+
+def valid_file_path(path):
+    real_path = os.path.realpath(path)
+    if real_path.startswith("/"):
+        return False 
+    return real_path 
+
+if __name__ != '__main__':
+     app.run(host='192.168.2.1')
