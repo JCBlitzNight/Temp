@@ -1,2 +1,3 @@
-How well do you understand and interpret information at the bit level within data structures or digital artifacts?
-To what extent can you reconstruct or manipulate data at the bit level to extract meaningful information or reverse engineer structures?
+How well can you process digital evidence collected from various source ?
+To what extent do you ensure that the processing of digital evidence aligns with legal standards and requirements, including making legally sound copies?
+How adept are you at implementing measures to protect digital evidence from alteration, loss, or unauthorized access during processing?
