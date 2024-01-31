@@ -1,11 +1,7 @@
-How well can you extract volatile data from various sources, including RAM, system processes, and temporary storage areas?
-
-How proficient are you in identifying artifacts within volatile data that may be crucial for digital forensics, incident response, or cybersecurity investigations?
-                                                                                        
-To what extent do you understand the memory structures and processes that store volatile data, and how capable are you in navigating and interpreting this data for forensic analysis?
-How skilled are you in using relevant tools and technologies for analyzing volatile dat
-                                                                                                                                                               
-                                                                                                                                                               
+How proficient are you in identifying different types of malware, including but not limited to viruses, worms, trojans, and ransomware?
+To what extent can you capture malware samples safely for further analysis without compromising the integrity of the samples?
+How capable are you in containing and preventing the spread of malware within a network or system once identified?                                                     
+How effective are you in reporting malware incidents to relevant stakeholders, including incident details, impact assessment, and recommended actions?                                                                                                                                                               
                                                                                                                                                                
                                                                                                                                                                
                                                                                                                                                                
