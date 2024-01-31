@@ -1,3 +1,2 @@
-How proficient are you in using one-way hash functions, such as SHA and MD5, to generate hash values for data integrity verification?
-How well can you verify the integrity of data using one-way hash functions, ensuring that the data has not been tampered with?
-To what extent can you select and apply the most suitable one-way hash algorithm for a given security requirement or use case?
+How proficient are you in analyzing code to identify anomalies and determine whether it is indicative of malicious or benign behavior?
+How well can you identify and distinguish code behavior that aligns with known malicious patterns or tactics?
