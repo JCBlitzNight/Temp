@@ -1,5 +1,11 @@
-How proficient are you in using network analysis tools such as Nmap, fuzzing tools, and other vulnerability scanning tools to identify potential vulnerabilities in a network environment?
+How well can you extract volatile data from various sources, including RAM, system processes, and temporary storage areas?
 
-How well do you understand different types of vulnerabilities that network analysis tools can identify, including common issues like open ports, misconfigurations, and potential security risks?
-
-How proficient are you in effectively communicating the findings from network analysis tools to relevant stakeholders, including technical and non-technical audiences?
+How proficient are you in identifying artifacts within volatile data that may be crucial for digital forensics, incident response, or cybersecurity investigations?
+                                                                                        
+To what extent do you understand the memory structures and processes that store volatile data, and how capable are you in navigating and interpreting this data for forensic analysis?
+How skilled are you in using relevant tools and technologies for analyzing volatile dat
+                                                                                                                                                               
+                                                                                                                                                               
+                                                                                                                                                               
+                                                                                                                                                               
+                                                                                                                                                               
