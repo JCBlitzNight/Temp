@@ -1,2 +1,2 @@
-To what extent can you identify patterns and emerging trends from the data you analyze?
-How well can you apply trend analysis insights to inform decision-making processes?
+How well can you understand and interpret the structure of network packets?
+How proficient are you in detecting anomalies or irregularities within packet-level data ?
