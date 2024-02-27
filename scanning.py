@@ -11,6 +11,6 @@ Mac:
 4. How confident are you in your ability to analyze application data on Apple devices, including browsing history, email communications, and various application interactions, to identify potential security incidents or user activities?
 
 Linux:
-1. How confident are you in identifying malicious activity on a Linux system, including analyzing system logs, user accounts, and hidden files?
-2. How confident are you in your ability to analyze suspicious files, reverse engineer Linux malware, and extract actionable intelligence from malware artifacts on a Linux system?
-3. How confident are you in performing analyzing malware artifacts in memory on a Linux system?
+1. How confident are you in your ability to detect malicious activity on a Linux system by examining system logs, including login history, authentication-related files, and system logs, for suspicious activities or unauthorized access?
+2. How confident are you in your ability to identify potential security threats on a Linux system by analyzing user activity artifacts, such as user history files, configuration files, and application logs, to detect anomalous behavior or unauthorized actions?
+3. How confident are you in your ability to detect malicious activity on a Linux system by analyzing filesystem artifacts, such as hidden files and directories, newly created files, or files with suspicious permissions, using standard Linux command-line tools?
